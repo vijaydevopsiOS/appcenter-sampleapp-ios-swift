@@ -16,12 +16,23 @@ steps:
 
 - task: Xcode@5
   inputs:
-    actions: 'clean build'
-    configuration: 'Release'
+    actions: 'build-for-testing'
+    configuration: 'Debug'
     sdk: 'iphoneos'
     xcWorkspacePath: '*.xcworkspace'
     scheme: 'sampleapp-ios-swift'
-    xcodeVersion: 'specifyPath'
-    xcodeDeveloperDir: '/Applications/Xcode_11.3.app'
     packageApp: false
+    destinationDevices: 'platform=iOS Simulator,name=iPhone SE,OS=12.2'
     publishJUnitResults: true
+    args: '-derivedDataPath build/derivedData'
+
+- task: AppCenterTest@1
+  inputs:
+    appFile: 'build/derivedData/Build/Products/Debug-iphoneos/sampleapp-ios-swift.app'
+    frameworkOption: 'xcuitest'
+    xcUITestBuildDirectory: 'build/derivedData/Build/Products/Debug-iphoneos'
+    credentialsOption: 'serviceEndpoint'
+    serverEndpoint: 'appcenter'
+    localeOption: 'en_US'
+    appSlug: 'vijaydevopsiOS/sampleapp'
+    devices: '7259410b'
